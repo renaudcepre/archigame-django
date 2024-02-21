@@ -1,9 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+    <div class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center" style="height: 100vh;">
+        <form method="post">
+            {% csrf_token %}
+            <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                    {{ form.username }}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control">
+                    {{ form.password }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button type="submit" class="button is-primary">Login</button>
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}
