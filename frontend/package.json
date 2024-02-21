@@ -1,0 +1,17 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "sass bulma_custom.scss  ../static/css/bulma.css",
+    "css-watch": "npm run build-css -- --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bulma": "^0.9.4",
+    "sass": "^1.71.1"
+  }
+}

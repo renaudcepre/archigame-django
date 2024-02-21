@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Game, Extension
+from .forms import PlayForm
+from .models import Play, PlayerScore, Game, Extension
 
 
 class ExtensionInline(admin.TabularInline):
@@ -12,5 +13,16 @@ class GameAdmin(admin.ModelAdmin):
     inlines = [ExtensionInline]
 
 
-admin.site.register(Game, GameAdmin)
+class PlayerScoreInline(admin.TabularInline):
+    model = PlayerScore
+    extra = 1  # Nombre de formulaires de score à afficher par défaut
 
+
+class PlayAdmin(admin.ModelAdmin):
+    inlines = [PlayerScoreInline]
+    form = PlayForm
+    list_display = ('date', 'game')
+
+
+admin.site.register(Play, PlayAdmin)
+admin.site.register(Game, GameAdmin)

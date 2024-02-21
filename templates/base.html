@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Site Web</title>
+    <link rel="stylesheet" href="{% static 'css/bulma.css' %}"></head>
+<body>
+<header>
+    <!-- Contenu de l'en-tête ici -->
+</header>
+
+{% include 'navbar.html' %}
+
+<main>
+    {% block content %}
+        <!-- Le contenu spécifique à chaque page sera inséré ici -->
+    {% endblock %}
+</main>
+
+<footer>
+    <!-- Pied de page ici -->
+</footer>
+</body>
+</html>
