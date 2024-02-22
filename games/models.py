@@ -7,6 +7,9 @@ class Game(models.Model):
     name = models.CharField(max_length=255)
     bgg_number = models.IntegerField(null=True)
 
+    score_min = models.IntegerField(default=0)
+    score_max = models.IntegerField()
+
     def __str__(self):
         return self.name
 
@@ -37,3 +40,12 @@ class PlayerScore(models.Model):
 
     class Meta:
         unique_together = ('play', 'player')
+
+
+class UserGameScore(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='game_scores')
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    total_score = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('user', 'game')
