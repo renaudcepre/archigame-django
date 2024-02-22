@@ -1,6 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
+
+from .models import Game
 from .models import Play
+
 
 class PlayForm(forms.ModelForm):
     class Meta:
@@ -18,3 +21,9 @@ class PlayForm(forms.ModelForm):
                     raise ValidationError("Toutes les extensions doivent appartenir au jeu sélectionné.")
 
         return cleaned_data
+
+
+class GameForm(forms.ModelForm):
+    class Meta:
+        model = Game
+        fields = ['name', 'bgg_number', 'score_min', 'score_max']

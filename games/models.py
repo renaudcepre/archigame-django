@@ -4,8 +4,8 @@ from django.utils import timezone
 
 
 class Game(models.Model):
-    name = models.CharField(max_length=255)
-    bgg_number = models.IntegerField(null=True)
+    name = models.CharField(max_length=255, unique=True)
+    bgg_number = models.IntegerField(null=True, unique=True)
 
     score_min = models.IntegerField(default=0)
     score_max = models.IntegerField()

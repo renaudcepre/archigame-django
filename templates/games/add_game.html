@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+
+        <h1 class="title">Ajouter un Jeu</h1>
+        <div class="columns">
+            <div class="column is-half">
+
+                <form method="post" class="box">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label">Nom du Jeu</label>
+                        <div class="control">
+                            {{ form.name }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Numéro BGG</label>
+                        <div class="control">
+                            {{ form.bgg_number }}
+                        </div>
+                    </div>
+                    <div class="box">
+                        <h3 class="title">Scores</h3>
+                        <p>Lorsque tu ajoutes un jeu à la base de données, il est important de spécifier les scores
+                            minimum
+                            et maximum. Ces valeurs définissent les limites du score que les joueurs peuvent obtenir
+                            dans ce
+                            jeu.</p>
+
+                        <p>Le score minimum représente le niveau le plus bas de performance attendu dans le jeu, tandis
+                            que
+                            le score maximum représente le niveau de performance le plus élevé qu'un joueur peut
+                            atteindre.</p>
+                        
+                        <p>Le score d'un joueur est calculé comme suit :</p>
+
+                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                            <mrow>
+                                <mi>score</mi>
+                                <mo>=</mo>
+                                <mrow>
+                                    <mrow>
+                                        <mo>(</mo>
+                                        <mfrac>
+                                            <mrow>
+                                                <mi>score_individuel</mi>
+                                                <mo>-</mo>
+                                                <mi>score_min</mi>
+                                            </mrow>
+                                            <mrow>
+                                                <mi>score_max</mi>
+                                                <mo>-</mo>
+                                                <mi>score_min</mi>
+                                            </mrow>
+                                        </mfrac>
+                                        <mo>)</mo>
+                                    </mrow>
+                                    <mo>&#x00D7;</mo>
+                                    <mn>1000</mn>
+                                </mrow>
+                            </mrow>
+                        </math>
+
+
+                        <div class="field is-grouped">
+                            <div class="control is-expanded">
+                                <label class="label">Score Minimum</label>
+                                {{ form.score_min }}
+                            </div>
+                            <div class="control is-expanded">
+                                <label class="label">Score Maximum</label>
+                                {{ form.score_max }}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Ajouter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

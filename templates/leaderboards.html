@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 {% block base-content %}
+    <div class="login-link">
+        {% include "navbar.html" %}
+    </div>
     <script src="{% static 'js/leaderboard.js' %}"></script>
     <div class="leaderboard-main">
         {% if game %}
             <h1 class="lb-title">{{ game.name }}</h1>
             <div class="leaderboard-extra-container">
-                <!-- Conteneur pour le premier élément -->
                 {% if leaderboard %}
                     <div class="leaderboard-container lb-first-place">
                         <div class="lb-entry first-place-entry">
@@ -15,7 +17,6 @@
                         </div>
                     </div>
                 {% endif %}
-                <!-- Conteneur pour les autres éléments -->
                 <div class="leaderboard-container">
                     {% for score in leaderboard %}
                         {% if forloop.counter > 1 %}
@@ -30,5 +31,45 @@
         {% else %}
             <p class="is-italic">Pas de jeux disponibles.</p>
         {% endif %}
+
+
     </div>
+
+    <style>
+        .login-link {
+            display: none;
+        }
+    </style>
+
+    <script>
+        let loginLink = document.querySelector('.login-link');
+
+        function showLoginLink() {
+            loginLink.style.display = 'none';
+        }
+
+        function hideLoginLink() {
+            loginLink.style.display = 'block';
+        }
+
+        document.addEventListener('mousemove', showLoginLink);
+
+        function resetTimer() {
+            hideLoginLink();
+            clearTimeout(timer);
+            startTimer();
+        }
+
+        let timer;
+
+        function startTimer() {
+            timer = setTimeout(hideLoginLink, 10000);  // 10 secondes
+        }
+
+        document.addEventListener('mousemove', resetTimer);
+        document.addEventListener('keydown', resetTimer);
+
+        startTimer();
+    </script>
+
 {% endblock %}
