@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% block base-content %}
+    <script src="{% static 'js/leaderboard.js' %}"></script>
+    <div class="leaderboard-main">
+        {% if game %}
+            <h1 class="lb-title">{{ game.name }}</h1>
+            <div class="leaderboard-extra-container">
+                <!-- Conteneur pour le premier élément -->
+                {% if leaderboard %}
+                    <div class="leaderboard-container lb-first-place">
+                        <div class="lb-entry first-place-entry">
+                            <div>{{ leaderboard.0.user.username }}</div>
+                            <div>{{ leaderboard.0.total_score }}</div>
+                        </div>
+                    </div>
+                {% endif %}
+                <!-- Conteneur pour les autres éléments -->
+                <div class="leaderboard-container">
+                    {% for score in leaderboard %}
+                        {% if forloop.counter > 1 %}
+                            <div class="lb-entry">
+                                <div>{{ score.user.username }}</div>
+                                <div>{{ score.total_score }}</div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <p class="is-italic">Pas de jeux disponibles.</p>
+        {% endif %}
+    </div>
+{% endblock %}
