@@ -1,16 +1,21 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.db.models import Sum
-from .models import User, UserGameScore
 
-# Définition d'une nouvelle classe d'admin pour User
+from .models import User
+
+
 class UserAdmin(BaseUserAdmin):
-    def total_score(self, obj):
-        return UserGameScore.objects.filter(user=obj).aggregate(total=Sum('total_score'))['total'] or 0
+    list_display = BaseUserAdmin.list_display + ('total_score_display', 'total_games_display',)
 
-    total_score.short_description = 'Total Score'  #
+    def total_score_display(self, obj):
+        return obj.total_score()
 
-    list_display = BaseUserAdmin.list_display + ('total_score',)
+    total_score_display.short_description = 'Total Score'
+
+    def total_games_display(self, obj):
+        return obj.total_plays()
+
+    total_games_display.short_description = 'Total Games'
 
 
 admin.site.register(User, UserAdmin)
