@@ -15,13 +15,13 @@ class GameAdmin(admin.ModelAdmin):
 
 class PlayerScoreInline(admin.TabularInline):
     model = PlayerScore
-    extra = 1  # Nombre de formulaires de score à afficher par défaut
+    extra = 1
 
 
 class PlayAdmin(admin.ModelAdmin):
     inlines = [PlayerScoreInline]
     form = PlayForm
-    list_display = ('date', 'game')
+    list_display = ('date', 'game_configuration')
 
 
 class GameConfigurationAdmin(admin.ModelAdmin):

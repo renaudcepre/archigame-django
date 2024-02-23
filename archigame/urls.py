@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 
-from games.views import leaderboards, add_game, GameDetailView, GameUpdateView, game_list
+from games.views import leaderboards, add_game, GameDetailView, GameUpdateView, game_list, user_random_game_score
 from users.views import profile_view
 
 urlpatterns = [

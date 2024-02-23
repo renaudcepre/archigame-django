@@ -6,14 +6,17 @@
         <div class="columns is-multiline">
             {% for game in games %}
                 <div class="column is-one-third">
-                    <div class="card">
+                    <div class="card" style="min-height: 160px">
                         <div class="card-content">
                             <p class="title">{{ game.name }}</p>
-                            <p class="subtitle">
-                                <a href="https://boardgamegeek.com/boardgame/{{ game.bgg_number }}" target="_blank">
-                                    Voir sur BoardGameGeek
-                                </a>
-                            </p>
+                            {% if game.bgg_number %}
+                                <p class="subtitle is-size-7">
+                                    <a href="https://boardgamegeek.com/boardgame/{{ game.bgg_number }}" target="_blank">
+                                        Voir sur BoardGameGeek
+                                    </a>
+                                </p>
+                            {% endif %}
+
                         </div>
                         <footer class="card-footer">
                             <a href="{% url 'update_game' game.id %}" class="card-footer-item">Modifier</a>
@@ -25,8 +28,8 @@
     </div>
 
     <div class="container mt-6">
-    <div class="box mt-6">
-        <a href="{% url 'add_game' %}" class="button is-primary">Ajouter un Jeu</a>
-    </div>
+        <div class="box mt-6">
+            <a href="{% url 'add_game' %}" class="button is-primary">Ajouter un Jeu</a>
+        </div>
     </div>
 {% endblock %}

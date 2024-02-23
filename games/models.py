@@ -29,12 +29,6 @@ class GameConfiguration(models.Model):
     score_min = models.IntegerField(default=0)
     score_max = models.IntegerField()
 
-    def save(self, *args, **kwargs):
-        for extension in self.extensions.all():
-            if extension.game != self.game:
-                raise ValidationError(f"L'extension '{extension.name}' n'est pas liée au jeu '{self.game.name}'.")
-        super().save(*args, **kwargs)
-
     def __str__(self):
         extensions_names = ", ".join(extension.name for extension in self.extensions.all())
         player_info = f"{self.min_players}-{self.max_players} players"
@@ -43,12 +37,11 @@ class GameConfiguration(models.Model):
 
 class Play(models.Model):
     date = models.DateField(default=timezone.now)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    extensions = models.ManyToManyField(Extension, blank=True)
+    game_configuration = models.ForeignKey(GameConfiguration, on_delete=models.CASCADE, related_name='plays')
     players = models.ManyToManyField(settings.AUTH_USER_MODEL, through='PlayerScore', related_name='plays')
 
     def __str__(self):
-        return f"{self.game.name} on {self.date}"
+        return f"{self.game_configuration} on {self.date}"
 
 
 class PlayerScore(models.Model):
@@ -62,8 +55,8 @@ class PlayerScore(models.Model):
 
 class UserGameScore(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='game_scores')
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game_configuration = models.ForeignKey(GameConfiguration, on_delete=models.CASCADE, related_name='user_game_scores', null=True)
     total_score = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = ('user', 'game')
+        unique_together = ('user', 'game_configuration')
