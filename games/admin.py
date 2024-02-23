@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .forms import PlayForm
-from .models import Play, PlayerScore, Game, Extension
+from .forms import PlayForm, GameConfigurationForm
+from .models import Play, PlayerScore, Game, Extension, GameConfiguration
 
 
 class ExtensionInline(admin.TabularInline):
@@ -23,6 +23,20 @@ class PlayAdmin(admin.ModelAdmin):
     form = PlayForm
     list_display = ('date', 'game')
 
+
+class GameConfigurationAdmin(admin.ModelAdmin):
+    list_display = ('game', 'display_extensions', 'min_players', 'max_players', 'score_min', 'score_max')
+    search_fields = ['game__name', 'extensions__name']
+    filter_horizontal = ('extensions',)
+    form = GameConfigurationForm
+
+    def display_extensions(self, obj):
+        return len(obj.extensions.all())
+
+    display_extensions.short_description = 'Extensions'
+
+
+admin.site.register(GameConfiguration, GameConfigurationAdmin)
 
 admin.site.register(Play, PlayAdmin)
 admin.site.register(Game, GameAdmin)

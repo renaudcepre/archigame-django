@@ -55,7 +55,7 @@ class GameDetailView(DetailView):
 
 class GameUpdateView(UpdateView):
     model = Game
-    fields = ['name', 'bgg_number', 'score_min', 'score_max']  # Champs que vous voulez mettre à jour
+    fields = ['name', 'bgg_number']  # Champs que vous voulez mettre à jour
     template_name = 'games/update.html'  # Template pour le formulaire de mise à jour
     success_url = reverse_lazy('game_list')  # URL à rediriger après la mise à jour réussie
 

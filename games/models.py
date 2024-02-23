@@ -1,14 +1,12 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
 
 class Game(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    bgg_number = models.IntegerField(null=True, unique=True)
-
-    score_min = models.IntegerField(default=0)
-    score_max = models.IntegerField()
+    bgg_number = models.IntegerField(null=True, blank=True, unique=True)
 
     def __str__(self):
         return self.name
@@ -21,6 +19,26 @@ class Extension(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class GameConfiguration(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    extensions = models.ManyToManyField(Extension, blank=True)
+    min_players = models.IntegerField(default=1)
+    max_players = models.IntegerField(default=4)
+    score_min = models.IntegerField(default=0)
+    score_max = models.IntegerField()
+
+    def save(self, *args, **kwargs):
+        for extension in self.extensions.all():
+            if extension.game != self.game:
+                raise ValidationError(f"L'extension '{extension.name}' n'est pas liée au jeu '{self.game.name}'.")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        extensions_names = ", ".join(extension.name for extension in self.extensions.all())
+        player_info = f"{self.min_players}-{self.max_players} players"
+        return f"{self.game.name} with extensions: {extensions_names} ({player_info})"
 
 
 class Play(models.Model):
