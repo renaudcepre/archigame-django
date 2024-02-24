@@ -2,15 +2,13 @@
 {% load static %}
 
 {% block base-content %}
+
+
 {% include 'navbar.html' %}
 
-<main>
+<main class="w-full">
     {% block content %}
-        <!-- Le contenu spécifique à chaque page sera inséré ici -->
     {% endblock %}
 </main>
 
-<footer>
-    <!-- Pied de page ici -->
-</footer>
 {% endblock %}

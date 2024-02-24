@@ -1,38 +1,63 @@
-from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
+import datetime
+import json
+
 from django.core.serializers import serialize
-from django.db.models import Count
+from django.db.models import Sum
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView
 
-from .forms import GameForm
-from .models import Game, UserGameScore
-from .models import GameConfiguration
+from users.models import User
+from .forms import PlayForm
+from .models import GameConfiguration, PlayerScore
 
+
+def add_play(request):
+    if request.method == 'POST':
+        form = PlayForm(request.POST)
+        if form.is_valid():
+            play = form.save()
+
+            # Extrait et décode les scores JSON
+            scores_json = request.POST.get('scores_json', '{}')
+            scores = json.loads(scores_json)
+
+            for player_id, score in scores.items():
+                # Assure-toi que le score est un entier et traite chaque score
+                try:
+                    score = int(score)
+                    player = User.objects.get(pk=player_id)
+                    PlayerScore.objects.update_or_create(
+                        play=play,
+                        player=player,
+                        defaults={'score': score},
+                    )
+                except (ValueError, TypeError, User.DoesNotExist):
+                    continue
+
+            return redirect(reverse_lazy('leaderboards'))
+    else:
+        form = PlayForm()
+
+    configurations = GameConfiguration.objects.all()
+    users = User.objects.all()
+    return render(request, 'crud/plays/add_play.html', {
+        'form': form,
+        'configurations_json': [{"value": config.id, "label": str(config)} for config in configurations],
+        'users_json': [{"value": user.id, "label": str(user)} for user in users],
+    })
 
 
 def leaderboards(request):
+    game = Game.objects.filter(id=1).first()  # todo: random game
+    return render(request, 'leaderboards/leaderboards.html', context={'game': game})
 
 
-    return render(request, 'leaderboards.html')
-
-
-
-from django.http import JsonResponse
-from .models import GameConfiguration, PlayerScore
-from django.utils import timezone
-from django.db.models import Sum
-import datetime
-
-
-def all_games_configurations(request):
-    game_configurations = GameConfiguration.objects.all()
-    data = serialize('json', game_configurations)
-    return JsonResponse(data, safe=False)
+def leaderboard(request, game_id):
+    game = Game.objects.filter(id=game_id).first()
+    return render(request, 'leaderboards/leaderboards.html', context={'game': game})
 
 
 def get_leaderboard_for_game(request, game_id):
@@ -86,19 +111,50 @@ def get_leaderboard_for_game(request, game_id):
     return JsonResponse(data)
 
 
-@login_required
-def add_game(request):
-    form = GameForm()
-    if request.method == 'POST':
-        form = GameForm(request.POST)
-        if form.is_valid():
-            game = form.save(commit=False)
-            game.save()
-            return redirect(reverse('game_detail',
-                                    args=[game.id]))
-        form = GameForm()
+from django.shortcuts import render, redirect
+from .forms import GameForm
+from .models import Game, Extension
 
-    return render(request, 'games/add_game.html', {'form': form})
+
+def add_game(request):
+    if request.method == 'POST':
+        game_form = GameForm(request.POST)
+        if game_form.is_valid():
+            game = game_form.save()
+
+            # Prépare une liste pour stocker les données des extensions
+            extensions_data = []
+            for key, value in request.POST.items():
+                if key.startswith('extension_name_'):
+                    _, idx = key.rsplit('_', 1)
+                    extension_data = {'name': value, 'bgg_number': None}
+                    extensions_data.append((idx, extension_data))
+                elif key.startswith('extension_bgg_number_'):
+                    _, idx = key.rsplit('_', 1)
+                    for extension in extensions_data:
+                        if extension[0] == idx:
+                            extension[1]['bgg_number'] = value or None
+                            break
+
+            # Crée les objets Extension
+            for _, data in extensions_data:
+                if data['name']:  # Assure que le champ d'extension n'est pas vide
+                    Extension.objects.create(game=game, name=data['name'], bgg_number=data['bgg_number'])
+
+            return redirect('game_detail', pk=game.pk)
+    else:
+        game_form = GameForm()
+
+    return render(request, 'games/add_game.html', {'form': game_form})
+
+
+# class GameCreateView(LoginRequiredMixin, CreateView):
+#     model = Game
+#     form_class = GameForm
+#     template_name = 'games/add_game.html'
+#
+#     def get_success_url(self):
+#         return reverse_lazy('game_detail', kwargs={'pk': self.object.pk})
 
 
 class GameDetailView(DetailView):

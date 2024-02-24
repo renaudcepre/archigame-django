@@ -9,7 +9,7 @@ from .models import Play
 class PlayForm(forms.ModelForm):
     class Meta:
         model = Play
-        fields = ['game_configuration', 'players', 'date']
+        fields = ['game_configuration', 'date']
 
 
 class GameForm(forms.ModelForm):
@@ -26,10 +26,19 @@ class GameConfigurationForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         game = cleaned_data.get("game")
-        extensions = cleaned_data.get("extensions")
+        extensions = cleaned_data.get("extensions", [])
 
+        # Vérifie si chaque extension est liée au jeu spécifié.
         for extension in extensions:
             if extension.game != game:
                 raise ValidationError(f"L'extension '{extension.name}' n'est pas liée au jeu '{game.name}'.")
+
+        # Vérifie l'unicité de la combinaison jeu/extensions.
+        if game:
+            existing_configs = GameConfiguration.objects.filter(game=game)
+            for config in existing_configs:
+                # Convertit QuerySet en list pour comparaison, car 'extensions' est une liste à ce moment.
+                if set(config.extensions.all()) == set(extensions):
+                    raise ValidationError("Une configuration identique pour ce jeu existe déjà.")
 
         return cleaned_data

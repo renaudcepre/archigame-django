@@ -1,0 +1,18 @@
+{% extends "meta-base.html" %}
+
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/leaderboards.css' %}">
+    <script src="{% static 'js/leaderboard.js' %}"></script>
+{% endblock %}
+
+
+{% block base-content %}
+    <div class="gradient-background h-[100vh]">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+{% endblock %}
+

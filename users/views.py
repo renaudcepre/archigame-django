@@ -6,7 +6,7 @@ from django.shortcuts import render
 
 @login_required
 def profile_view(request: WSGIRequest):
-    return render(request, 'users/profile.html', {'user': request.user})
+    return render(request, 'crud/users/profile.html', {'user': request.user})
 
 def logout_view(request):
     print("LOGOUT")

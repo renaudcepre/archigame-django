@@ -1,88 +1,100 @@
-{% extends "base.html" %}
+{% extends "page.html" %}
+{% load widget_tweaks %}
 
-{% block content %}
-    <div class="container">
+{% block header %}
+    {% include 'utils/title.html' with title='Ajouter un Jeu' %}
+{% endblock %}
 
-        <h1 class="title">Ajouter un Jeu</h1>
-        <div class="columns">
-            <div class="column is-half">
+{% block page-content %}
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <form method="post" class="w-full">
+            {% csrf_token %}
 
-                <form method="post" class="box">
-                    {% csrf_token %}
-                    <div class="field">
-                        <label class="label">Nom du Jeu</label>
-                        <div class="control">
-                            {{ form.name }}
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Numéro BGG</label>
-                        <div class="control">
-                            {{ form.bgg_number }}
-                        </div>
-                    </div>
-                    <div class="box">
-                        <h3 class="title">Scores</h3>
-                        <p>Lorsque tu ajoutes un jeu à la base de données, il est important de spécifier les scores
-                            minimum
-                            et maximum. Ces valeurs définissent les limites du score que les joueurs peuvent obtenir
-                            dans ce
-                            jeu.</p>
+            {% if form.non_field_errors %}
+                <div class="error">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-                        <p>Le score minimum représente le niveau le plus bas de performance attendu dans le jeu, tandis
-                            que
-                            le score maximum représente le niveau de performance le plus élevé qu'un joueur peut
-                            atteindre.</p>
-                        
-                        <p>Le score d'un joueur est calculé comme suit :</p>
-
-                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-                            <mrow>
-                                <mi>score</mi>
-                                <mo>=</mo>
-                                <mrow>
-                                    <mrow>
-                                        <mo>(</mo>
-                                        <mfrac>
-                                            <mrow>
-                                                <mi>score_individuel</mi>
-                                                <mo>-</mo>
-                                                <mi>score_min</mi>
-                                            </mrow>
-                                            <mrow>
-                                                <mi>score_max</mi>
-                                                <mo>-</mo>
-                                                <mi>score_min</mi>
-                                            </mrow>
-                                        </mfrac>
-                                        <mo>)</mo>
-                                    </mrow>
-                                    <mo>&#x00D7;</mo>
-                                    <mn>1000</mn>
-                                </mrow>
-                            </mrow>
-                        </math>
-
-
-                        <div class="field is-grouped">
-                            <div class="control is-expanded">
-                                <label class="label">Score Minimum</label>
-                                {{ form.score_min }}
+            <div class="flex flex-wrap -mx-2 justify-center">
+                <div class="px-2 w-2/4">
+                    <label class="block text-sm font-bold mb-2" for="name">Nom du Jeu</label>
+                    <div class="mt-1">
+                        {{ form.name|add_class:"shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline  bg-opacity-40 bg-gray-700" }}
+                        {% if form.name.errors %}
+                            <div class="text">
+                                {% for error in form.name.errors %}
+                                    <p class="text-red-700 text-sm">{{ error }}</p>
+                                {% endfor %}
                             </div>
-                            <div class="control is-expanded">
-                                <label class="label">Score Maximum</label>
-                                {{ form.score_max }}
-                            </div>
-                        </div>
-
+                        {% endif %}
                     </div>
-                    <div class="field">
-                        <div class="control">
-                            <button type="submit" class="button is-primary">Ajouter</button>
-                        </div>
+                </div>
+                <div class="px-2 w-1/4">
+                    <label class="block text-sm mb-2" for="bgg_number">Numéro BGG</label>
+                    <div class="mt-1">
+                        {{ form.bgg_number|add_class:"shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline bg-opacity-40 bg-gray-700" }}
+                        <span class="text-[0.7em]">Ce numéro sert a créer un lien vers la page BGG du jeu.</span>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+            <div id="extensions"></div>
+            <button type="button" onclick="addExtensionField()">Ajouter Extension</button>
+            <div class="flex justify-end mt-4">
+                <button type="submit"
+                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-opacity-30">
+                    Ajouter
+                </button>
+            </div>
+        </form>
     </div>
+    <script>
+        let extensionCount = 0;
+
+        function addExtensionField() {
+            const container = document.getElementById('extensions');
+
+            const extensionDiv = document.createElement('div');
+            extensionDiv.classList.add('flex', 'flex-wrap', '-mx-2', 'justify-center', 'mt-2');
+
+            const nameInputDiv = document.createElement('div');
+            nameInputDiv.classList.add('px-2', 'w-2/4');
+
+            const nameLabel = document.createElement('label');
+            nameLabel.classList.add('block', 'text-sm', 'font-bold', 'mb-2');
+            nameLabel.innerHTML = 'Nom de l\'Extension';
+
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.name = 'extension_name_' + extensionCount;
+            nameInput.classList.add('shadow', 'appearance-none', 'border', 'rounded', 'w-full', 'py-2', 'px-3', 'leading-tight', 'focus:outline-none', 'focus:shadow-outline', 'bg-opacity-40', 'bg-gray-700');
+
+            nameInputDiv.appendChild(nameLabel);
+            nameInputDiv.appendChild(nameInput);
+
+            const numberInputDiv = document.createElement('div');
+            numberInputDiv.classList.add('px-2', 'w-1/4');
+
+            const numberLabel = document.createElement('label');
+            numberLabel.classList.add('block', 'text-sm', 'font-bold', 'mb-2');
+            numberLabel.innerHTML = 'Numéro BGG';
+
+            const numberInput = document.createElement('input');
+            numberInput.type = 'text';
+            numberInput.name = 'extension_bgg_number_' + extensionCount;
+            numberInput.classList.add('shadow', 'appearance-none', 'border', 'rounded', 'w-full', 'py-2', 'px-3', 'leading-tight', 'focus:outline-none', 'focus:shadow-outline', 'bg-opacity-40', 'bg-gray-700');
+
+            numberInputDiv.appendChild(numberLabel);
+            numberInputDiv.appendChild(numberInput);
+
+            extensionDiv.appendChild(nameInputDiv);
+            extensionDiv.appendChild(numberInputDiv);
+
+            container.appendChild(extensionDiv);
+
+            extensionCount++;
+        }
+    </script>
 {% endblock %}

@@ -1,0 +1,115 @@
+{% extends "crud/meta-base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="title">Ajouter une Partie</h1>
+        <div class="columns">
+            <div class="column is-half">
+                <form method="post" class="box">
+                    {% csrf_token %}
+                    <input type="hidden" id="scores_json" name="scores_json" value="">
+                    <div class="field">
+                        <label class="label">Configuration du Jeu</label>
+                        <div class="control">
+                            <select id="game_configuration" name="game_configuration"></select>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Date</label>
+                        <div class="control">
+                            {{ form.date }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Joueurs</label>
+                        <div class="control">
+                            <select id="users" name="players" multiple></select>
+                        </div>
+                    </div>
+                    <div id="scores_container"></div>
+
+                    <div class="box">
+                        <h3 class="title">Instructions</h3>
+                        <p>En ajoutant une partie, tu dois sélectionner la configuration du jeu, incluant les extensions
+                            utilisées, le nombre de joueurs, et spécifier la date à laquelle la partie a été jouée.
+                            Chaque joueur participant à la partie doit être ajouté avec son score respectif.</p>
+                        <p>Cette information aide à suivre les performances des joueurs au fil du temps et à voir
+                            comment les différentes configurations de jeu affectent l'expérience de jeu.</p>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Ajouter la Partie</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const configurations = {{ configurations_json|safe }};
+            console.log(configurations)
+            new Choices('#game_configuration', {
+                choices: configurations,
+                searchEnabled: true,
+            });
+
+            const users = {{ users_json|safe }};
+            console.log(configurations)
+            new Choices('#users', {
+                choices: users,
+                searchEnabled: true,
+
+            });
+        });
+
+        
+        document.addEventListener('DOMContentLoaded', function () {
+    const configurations = {{ configurations_json|safe }};
+    new Choices('#game_configuration', {
+        choices: configurations,
+        searchEnabled: true,
+    });
+
+    const users = {{ users_json|safe }};
+    new Choices('#users', {
+        choices: users,
+        searchEnabled: true,
+    });
+
+    let scores = {};
+
+    
+    
+    document.getElementById('users').addEventListener('change', function (e) {
+        const selectedOptions = Array.from(e.target.options).filter(option => option.selected);
+        const scoresContainer = document.getElementById('scores_container');
+
+        scoresContainer.innerHTML = '';
+        scores = {}; // Réinitialise les scores à chaque changement de sélection
+
+        selectedOptions.forEach(option => {
+            const div = document.createElement('div');
+            div.className = 'field';
+            const label = document.createElement('label');
+            label.className = 'label';
+            label.innerText = 'Score pour ' + option.text;
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'input';
+            input.oninput = function() {
+                scores[option.value] = this.value; // Met à jour l'objet scores
+                document.getElementById('scores_json').value = JSON.stringify(scores); // Met à jour le champ caché
+            };
+            div.appendChild(label);
+            div.appendChild(input);
+            scoresContainer.appendChild(div);
+        });
+    });
+});
+
+    </script>
+
+{% endblock %}
