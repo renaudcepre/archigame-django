@@ -1,100 +1,114 @@
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.text-pixel {
+    font-family: "Pixelify Sans", sans-serif;
+}
+
 .leaderboard-main {
-    height: 100vh;
-    background-size: 120% 120%;
-    animation: gradient-animation 10s ease infinite;
     color: white;
     padding-left: 50px;
     padding-right: 50px;
+    background-size: 400% 400%;
+    height: 100vh;
+    background: linear-gradient(-45deg, #000000, #571272, #066558, #000000);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 
-.lb-title {
-    color: #ffffff;
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7),
-    0 0 0 #ffffff;
-    /*font-size: 5em;*/
-    text-align: center;
-    font-family: "Pixelify Sans", sans-serif;
+
+h1 {
+    font-size: 3em;
 }
+
+h2 {
+    font-size: 2em;
+}
+
+.text-glow {
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7), 0 0 0 #ffffff;
+}
+
+/*}*/
 
 .login-link {
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease; /* Ajoute une transition en fondu */
+    display: none;
+    transition: opacity 1s ease;
 }
 
 .login-link.show {
     opacity: 1;
+    display: block;
     visibility: visible;
 }
 
 
-#extensions {
-    display: flex;
-    width: 100%;
-    justify-content: space-around;
-    margin-bottom: 20px;
-}
+/*#extensions {*/
+/*    display: flex;*/
+/*    width: 100%;*/
+/*    justify-content: space-around;*/
+/*    margin-bottom: 20px;*/
+/*}*/
 
-.lb-leaderboard-title {
-    color: rgba(255, 255, 255, 0.45);
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7),
-    0 0 0 rgba(255, 255, 255, 0.42);
-    /*font-size: 5em;*/
-    text-align: center;
-    font-family: "Pixelify Sans", sans-serif;
-}
+/*.lb-leaderboard-title {*/
+/*    color: rgba(255, 255, 255, 0.45);*/
+/*    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7),*/
+/*    0 0 0 rgba(255, 255, 255, 0.42);*/
+/*    !*font-size: 5em;*!*/
+/*    text-align: center;*/
+/*    font-family: "Pixelify Sans", sans-serif;*/
+/*}*/
 
-.lb-title-light {
-    color: rgba(255, 255, 255, 0.36);
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7),
-    0 0 0 rgba(255, 255, 255, 0.31);
-    font-size: 2em;
-    text-align: center;
-    font-family: "Pixelify Sans", sans-serif;
-}
+/*.lb-title-light {*/
+/*    color: rgba(255, 255, 255, 0.36);*/
+/*    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7),*/
+/*    0 0 0 rgba(255, 255, 255, 0.31);*/
+/*    font-size: 2em;*/
+/*    text-align: center;*/
+/*    font-family: "Pixelify Sans", sans-serif;*/
+/*}*/
 
-.lb-entry {
-    display: flex;
-    justify-content: space-around;
-}
+/*.lb-entry {*/
+/*    display: flex;*/
+/*    justify-content: space-around;*/
+/*}*/
 
-.leaderboard-extra-container {
-    border: solid 3px white;
-    padding-left: 10px;
-    padding-right: 10px;
-    max-width: 800px;
-    margin: auto;
-    height: 70vh;
-}
+/*.leaderboard-extra-container {*/
+/*    border: solid 3px white;*/
+/*    padding-left: 10px;*/
+/*    padding-right: 10px;*/
+/*    max-width: 800px;*/
+/*    margin: auto;*/
+/*    height: 70vh;*/
+/*}*/
 
-.leaderboard-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 10px;
-    font-size: 2em;
-    font-family: "Pixelify Sans", sans-serif;
-}
+/*.leaderboard-container {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: space-between;*/
+/*    gap: 10px;*/
+/*    font-size: 2em;*/
+/*    font-family: "Pixelify Sans", sans-serif;*/
+/*}*/
 
-.lb-first-place {
-    color: #ffffff;
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7),
-    0 0 0 #ffffff;
-    font-size: 3em;
-    font-weight: bold;
-}
-
-@keyframes gradient-animation {
-    0% {
-        background-position: 0 50%;
-    }
-    50% {
-        background-position: 200% 50%;
-    }
-    100% {
-        background-position: 0 50%;
-    }
-}
-
+/*.lb-first-place {*/
+/*    color: #ffffff;*/
+/*    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7),*/
+/*    0 0 0 #ffffff;*/
+/*    font-size: 3em;*/
+/*    font-weight: bold;*/
+/*}*/
 
 

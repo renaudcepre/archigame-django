@@ -1,19 +1,19 @@
 {% load static %}
-<nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-
-    </div>
-
+<nav class="navbar is-transparent is-rounded" role="navigation" aria-label="main navigation">
     <div id="navbar" class="navbar-menu ">
         <div class="navbar-start">
+            {% url 'leaderboards' as leaderboards_url %}
+            {% if request.path != leaderboards_url %}
             <div class="navbar-item">
-                <a class="has-text-white  has-text-weight-bold" href="{% url 'game_list' %}">Games</a>
+                <a class=" has-text-weight-bold text-pixel " href="{% url 'leaderboards' %}">LEADERBOARDS</a>
             </div>
+            {% endif %}
             <div class="navbar-item">
-                <a class="has-text-white has-text-weight-bold" href="{% url 'leaderboards' %}">Leaderboards</a>
+                <a class=" " href="{% url 'game_list' %}">Games</a>
             </div>
+
             <div class="navbar-item">
-                <a class="has-text-white has-text-weight-bold" href="{% url 'profile' %}">Profile</a>
+                <a class="" href="{% url 'profile' %}">Profile</a>
             </div>
         </div>
         <div class="navbar-end">

@@ -1,8 +1,14 @@
-{% extends "base.html" %}
+{% extends "crud/base.html" %}
 
 {% block content %}
     <div class="container">
-        <h1 class="title">Liste des Jeux</h1>
+
+        <div class="columns mt-6">
+            <h1 class="title column">Liste des Jeux</h1>
+
+            <a href="{% url 'add_game' %}" class="button column is-one-fifth is-primary mb-4">Ajouter un Jeu</a>
+        </div>
+
         <div class="columns is-multiline">
             {% for game in games %}
                 <div class="column is-one-third">
@@ -27,9 +33,5 @@
         </div>
     </div>
 
-    <div class="container mt-6">
-        <div class="box mt-6">
-            <a href="{% url 'add_game' %}" class="button is-primary">Ajouter un Jeu</a>
-        </div>
-    </div>
+
 {% endblock %}

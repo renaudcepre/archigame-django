@@ -12,16 +12,6 @@ from django.views.generic.edit import UpdateView
 from .forms import GameForm
 from .models import Game, UserGameScore
 from .models import GameConfiguration
-
-
-
-def leaderboards(request):
-
-
-    return render(request, 'leaderboards.html')
-
-
-
 from django.http import JsonResponse
 from .models import GameConfiguration, PlayerScore
 from django.utils import timezone
@@ -29,10 +19,16 @@ from django.db.models import Sum
 import datetime
 
 
-def all_games_configurations(request):
-    game_configurations = GameConfiguration.objects.all()
-    data = serialize('json', game_configurations)
-    return JsonResponse(data, safe=False)
+def leaderboards(request):
+    game = Game.objects.filter(id=1).first() # todo: random game
+    return render(request, 'leaderboards/leaderboards.html', context={'game': game})
+
+
+def leaderboard(request, game_id):
+    game = Game.objects.filter(id=game_id).first()
+    return render(request, 'leaderboards/leaderboards.html', context={'game': game})
+
+
 
 
 def get_leaderboard_for_game(request, game_id):
@@ -98,12 +94,12 @@ def add_game(request):
                                     args=[game.id]))
         form = GameForm()
 
-    return render(request, 'games/add_game.html', {'form': form})
+    return render(request, 'crud/games/add_game.html', {'form': form})
 
 
 class GameDetailView(DetailView):
     model = Game
-    template_name = 'games/detail.html'
+    template_name = 'crud/games/detail.html'
     context_object_name = 'game'
     pk_url_kwarg = 'game_id'
 
@@ -111,10 +107,10 @@ class GameDetailView(DetailView):
 class GameUpdateView(UpdateView):
     model = Game
     fields = ['name', 'bgg_number']
-    template_name = 'games/update.html'
+    template_name = 'crud/games/update.html'
     success_url = reverse_lazy('game_list')
 
 
 def game_list(request):
     games = Game.objects.all()
-    return render(request, 'games/list.html', {'games': games})
+    return render(request, 'crud/games/list.html', {'games': games})

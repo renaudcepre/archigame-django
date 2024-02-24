@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build-css": "sass bulma_custom.scss  ../static/css/bulma.css",
+    "build-css": "sass ../front-end/bulma_custom.scss  ../static/css/bulma.css",
     "css-watch": "npm run build-css -- --watch"
   },
   "author": "",
