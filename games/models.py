@@ -29,10 +29,15 @@ class GameConfiguration(models.Model):
     score_min = models.IntegerField(default=0)
     score_max = models.IntegerField()
 
+    class Meta:
+        ordering = ['game__name']
+
     def __str__(self):
         extensions_names = ", ".join(extension.name for extension in self.extensions.all())
-        player_info = f"{self.min_players}-{self.max_players} players"
-        return f"{self.game.name} with extensions: {extensions_names} ({player_info})"
+        if extensions_names:
+            return f"{self.game.name} with extensions: {extensions_names}"
+        else:
+            return f"{self.game}"
 
 
 class Play(models.Model):
@@ -55,7 +60,8 @@ class PlayerScore(models.Model):
 
 class UserGameScore(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='game_scores')
-    game_configuration = models.ForeignKey(GameConfiguration, on_delete=models.CASCADE, related_name='user_game_scores', null=True)
+    game_configuration = models.ForeignKey(GameConfiguration, on_delete=models.CASCADE, related_name='user_game_scores',
+                                           null=True)
     total_score = models.IntegerField(default=0)
 
     class Meta:

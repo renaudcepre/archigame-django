@@ -1,34 +1,70 @@
+import datetime
+import json
+
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
 from django.core.serializers import serialize
-from django.db.models import Count
+from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import DetailView
+from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
 
+from users.models import User
 from .forms import GameForm
-from .models import Game, UserGameScore
-from .models import GameConfiguration
-from django.http import JsonResponse
+from .forms import PlayForm
+from .models import Game
 from .models import GameConfiguration, PlayerScore
-from django.utils import timezone
-from django.db.models import Sum
-import datetime
+from .models import Play
+
+
+def add_play(request):
+    if request.method == 'POST':
+        form = PlayForm(request.POST)
+        if form.is_valid():
+            play = form.save()
+
+            # Extrait et décode les scores JSON
+            scores_json = request.POST.get('scores_json', '{}')
+            scores = json.loads(scores_json)
+
+            for player_id, score in scores.items():
+                # Assure-toi que le score est un entier et traite chaque score
+                try:
+                    score = int(score)
+                    player = User.objects.get(pk=player_id)
+                    PlayerScore.objects.update_or_create(
+                        play=play,
+                        player=player,
+                        defaults={'score': score},
+                    )
+                except (ValueError, TypeError, User.DoesNotExist):
+                    continue
+
+            return redirect(reverse_lazy('leaderboards'))
+    else:
+        form = PlayForm()
+
+    configurations = GameConfiguration.objects.all()
+    users = User.objects.all()
+    return render(request, 'crud/plays/add_play.html', {
+        'form': form,
+        'configurations_json': [{"value": config.id, "label": str(config)} for config in configurations],
+        'users_json': [{"value": user.id, "label": str(user)} for user in users],
+    })
 
 
 def leaderboards(request):
-    game = Game.objects.filter(id=1).first() # todo: random game
+    game = Game.objects.filter(id=1).first()  # todo: random game
     return render(request, 'leaderboards/leaderboards.html', context={'game': game})
 
 
 def leaderboard(request, game_id):
     game = Game.objects.filter(id=game_id).first()
     return render(request, 'leaderboards/leaderboards.html', context={'game': game})
-
-
 
 
 def get_leaderboard_for_game(request, game_id):

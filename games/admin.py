@@ -25,9 +25,10 @@ class PlayAdmin(admin.ModelAdmin):
 
 
 class GameConfigurationAdmin(admin.ModelAdmin):
-    list_display = ('game', 'display_extensions', 'min_players', 'max_players', 'score_min', 'score_max')
     search_fields = ['game__name', 'extensions__name']
     filter_horizontal = ('extensions',)
+    ordering = ('game__name',)
+
     form = GameConfigurationForm
 
     def display_extensions(self, obj):
