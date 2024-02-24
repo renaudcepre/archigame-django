@@ -1,0 +1,100 @@
+{% extends "page.html" %}
+{% load widget_tweaks %}
+
+{% block header %}
+    {% include 'utils/title.html' with title='Ajouter un Jeu' %}
+{% endblock %}
+
+{% block page-content %}
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <form method="post" class="w-full">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="error">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="flex flex-wrap -mx-2 justify-center">
+                <div class="px-2 w-2/4">
+                    <label class="block text-sm font-bold mb-2" for="name">Nom du Jeu</label>
+                    <div class="mt-1">
+                        {{ form.name|add_class:"shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline  bg-opacity-40 bg-gray-700" }}
+                        {% if form.name.errors %}
+                            <div class="text">
+                                {% for error in form.name.errors %}
+                                    <p class="text-red-700 text-sm">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="px-2 w-1/4">
+                    <label class="block text-sm mb-2" for="bgg_number">Numéro BGG</label>
+                    <div class="mt-1">
+                        {{ form.bgg_number|add_class:"shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline bg-opacity-40 bg-gray-700" }}
+                        <span class="text-[0.7em]">Ce numéro sert a créer un lien vers la page BGG du jeu.</span>
+                    </div>
+                </div>
+            </div>
+            <div id="extensions"></div>
+            <button type="button" onclick="addExtensionField()">Ajouter Extension</button>
+            <div class="flex justify-end mt-4">
+                <button type="submit"
+                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-opacity-30">
+                    Ajouter
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+        let extensionCount = 0;
+
+        function addExtensionField() {
+            const container = document.getElementById('extensions');
+
+            const extensionDiv = document.createElement('div');
+            extensionDiv.classList.add('flex', 'flex-wrap', '-mx-2', 'justify-center', 'mt-2');
+
+            const nameInputDiv = document.createElement('div');
+            nameInputDiv.classList.add('px-2', 'w-2/4');
+
+            const nameLabel = document.createElement('label');
+            nameLabel.classList.add('block', 'text-sm', 'font-bold', 'mb-2');
+            nameLabel.innerHTML = 'Nom de l\'Extension';
+
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.name = 'extension_name_' + extensionCount;
+            nameInput.classList.add('shadow', 'appearance-none', 'border', 'rounded', 'w-full', 'py-2', 'px-3', 'leading-tight', 'focus:outline-none', 'focus:shadow-outline', 'bg-opacity-40', 'bg-gray-700');
+
+            nameInputDiv.appendChild(nameLabel);
+            nameInputDiv.appendChild(nameInput);
+
+            const numberInputDiv = document.createElement('div');
+            numberInputDiv.classList.add('px-2', 'w-1/4');
+
+            const numberLabel = document.createElement('label');
+            numberLabel.classList.add('block', 'text-sm', 'font-bold', 'mb-2');
+            numberLabel.innerHTML = 'Numéro BGG';
+
+            const numberInput = document.createElement('input');
+            numberInput.type = 'text';
+            numberInput.name = 'extension_bgg_number_' + extensionCount;
+            numberInput.classList.add('shadow', 'appearance-none', 'border', 'rounded', 'w-full', 'py-2', 'px-3', 'leading-tight', 'focus:outline-none', 'focus:shadow-outline', 'bg-opacity-40', 'bg-gray-700');
+
+            numberInputDiv.appendChild(numberLabel);
+            numberInputDiv.appendChild(numberInput);
+
+            extensionDiv.appendChild(nameInputDiv);
+            extensionDiv.appendChild(numberInputDiv);
+
+            container.appendChild(extensionDiv);
+
+            extensionCount++;
+        }
+    </script>
+{% endblock %}

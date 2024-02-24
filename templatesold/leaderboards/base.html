@@ -7,9 +7,12 @@
     <script src="{% static 'js/leaderboard.js' %}"></script>
 {% endblock %}
 
-{% block base-content %}
-    {% block content %}
 
-    {% endblock %}
+{% block base-content %}
+    <div class="gradient-background h-[100vh]">
+        {% block content %}
+
+        {% endblock %}
+    </div>
 {% endblock %}
 

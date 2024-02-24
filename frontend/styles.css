@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    color: white;
+}
+
+.text-pixel {
+    font-family: "Pixelify Sans", sans-serif;
+}
+
+.text-glow {
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7), 0 0 0 #ffffff;
+}
+
+
+@keyframes gradient {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+
+.gradient-background {
+    background: linear-gradient(-45deg, #000000, #571272, #066558, #000000);
+    background-size: 400% 400%;
+    animation: gradient 25s ease infinite;
+}
+
+.gradient-background-rev {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(18, 114, 80, 0.16), rgba(101, 6, 42, 0.15), rgba(255, 255, 255, 0.2));
+    background-size: 400% 400%;
+    animation: gradient 40s ease infinite;
+}

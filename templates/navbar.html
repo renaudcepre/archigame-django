@@ -1,42 +1,62 @@
 {% load static %}
-<nav class="navbar is-transparent is-rounded" role="navigation" aria-label="main navigation">
-    <div id="navbar" class="navbar-menu ">
-        <div class="navbar-start">
+<nav class="bg-transparent pt-2" role="navigation" aria-label="main navigation">
+
+    <div class="flex items-center justify-between">
+
+
+        <!-- LINKS -->
+        <div class="flex">
+
             {% url 'leaderboards' as leaderboards_url %}
             {% if request.path != leaderboards_url %}
-            <div class="navbar-item">
-                <a class=" has-text-weight-bold text-pixel " href="{% url 'leaderboards' %}">LEADERBOARDS</a>
-            </div>
+                <div class="mx-2">
+                    <a class=" text-lg hover:bg-blue-500  rounded p-1 hover:bg-opacity-20 transition-all" href="{% url 'leaderboards' %}">Leaderboards</a>
+                </div>
             {% endif %}
-            <div class="navbar-item">
-                <a class=" " href="{% url 'game_list' %}">Games</a>
+            <div class="mx-2">
+                <a class="text-lg hover:bg-blue-500  rounded p-1 hover:bg-opacity-20 transition-all" href="{% url 'game_list' %}">Games</a>
             </div>
 
-            <div class="navbar-item">
-                <a class="" href="{% url 'profile' %}">Profile</a>
+            <div class="mx-2">
+                <a class="text-lg hover:bg-blue-500  rounded p-1 hover:bg-opacity-20 transition-all" href="{% url 'profile' %}">Profile</a>
             </div>
         </div>
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="buttons">
+
+        <!-- AUTH -->
+        <div class="flex items-center">
+            <div class="mx-2">
+                <div class="flex gap-2">
                     {% if user.is_authenticated %}
-                        <form action="{% url 'logout' %}" method="post">
+                        <form action="{% url 'logout' %}" method="post" class="flex items-center">
                             {% csrf_token %}
-                            <button type="submit" class="button is-light">Logout</button>
+                            <button type="submit"
+                                    class="px-4 py-2 bg-transparent text-sm font-semibold border border-transparent rounded hover:bg-gray-100">
+                                Logout
+                            </button>
                         </form>
                     {% else %}
-                        <a class="button is-primary">
+                        <a class="px-4 py-2 bg-blue-500 text-white text-sm font-bold rounded hover:bg-blue-600 bg-opacity-30 hover:cursor-pointer">
                             <strong>Sign up</strong>
                         </a>
-                        <a href="{% url 'login' %}" class="button is-light">
+                        <a href="{% url 'login' %}"
+                           class="px-4 py-2 bg-transparent text-sm font-semibold border border-gray-300  rounded hover:bg-gray-600">
                             Log in
                         </a>
                     {% endif %}
                 </div>
             </div>
-            <a class="navbar-item" href="https://github.com/renaudcepre/" target="_blank">
-                <img src="{% static 'svg/github_logo.svg' %}" alt="GitHub Logo">
-            </a>
+
+            <!-- CODE -->
+            <button class="mx-2 flex items-center justify-center w-6 h-6 bg-blue-500 bg-opacity-30 text-white rounded-full hover:bg-blue-600"
+                    onclick="toggleVisibility()">
+                <!-- SVG pour une flèche vers le haut -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                </svg>
+            </button>
+
+
         </div>
     </div>
 </nav>
