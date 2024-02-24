@@ -23,11 +23,4 @@ def calculate_total_score(user: User, game_configuration: GameConfiguration):
     # total_score_aggregated['total_score'] pourrait être None si aucun score n'est trouvé
     total_score_from_db = total_score_aggregated.get('total_score') or 0
 
-    # Appliquer le calcul de score ajusté si nécessaire
-    total_score_adjusted = calculate_score(
-        total_score_from_db,
-        game_configuration.score_min,
-        game_configuration.score_max
-    )
 
-    return total_score_adjusted
