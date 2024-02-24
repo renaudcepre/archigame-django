@@ -1,75 +1,50 @@
 {% extends "base.html" %}
 {% load static %}
+
 {% block base-content %}
+
+    <script src="{% static 'js/leaderboard.js' %}"></script>
+
+    <div class="leaderboard-main ">
+
     <div class="login-link">
         {% include "navbar.html" %}
     </div>
-    <script src="{% static 'js/leaderboard.js' %}"></script>
-    <div class="leaderboard-main">
-        {% if game %}
-            <h1 class="lb-title">{{ game.name }}</h1>
-            <div class="leaderboard-extra-container">
-                {% if leaderboard %}
-                    <div class="leaderboard-container lb-first-place">
-                        <div class="lb-entry first-place-entry">
-                            <div>{{ leaderboard.0.user.username }}</div>
-                            <div>{{ leaderboard.0.total_score }}</div>
-                        </div>
+
+        <h1 class="lb-leaderboard-title is-size-1">Leaderboard</h1>
+        <h1 class="lb-title is-size-2" id="game"></h1>
+        <div id="extensions">
+
+        </div>
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <h2 class="title lb-title-light">All time</h2>
+                    <div id="leaderboard-all-time" class="leaderboard-container ">
                     </div>
-                {% endif %}
-                <div class="leaderboard-container">
-                    {% for score in leaderboard %}
-                        {% if forloop.counter > 1 %}
-                            <div class="lb-entry">
-                                <div>{{ score.user.username }}</div>
-                                <div>{{ score.total_score }}</div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                </div>
+                <div class="column">
+                    <h2 class="title lb-title-light">This Year</h2>
+                    <div id="leaderboard-year" class="leaderboard-container">
+
+                    </div>
+                </div>
+                <div class="column">
+                    <h2 class="title lb-title-light">This Month</h2>
+                    <div id="leaderboard-month" class="leaderboard-container">
+
+                    </div>
                 </div>
             </div>
-        {% else %}
-            <p class="is-italic">Pas de jeux disponibles.</p>
-        {% endif %}
-
-
+        </div>
     </div>
 
+
     <style>
-        .login-link {
-            display: none;
-        }
+
     </style>
 
+
     <script>
-        let loginLink = document.querySelector('.login-link');
-
-        function showLoginLink() {
-            loginLink.style.display = 'none';
-        }
-
-        function hideLoginLink() {
-            loginLink.style.display = 'block';
-        }
-
-        document.addEventListener('mousemove', showLoginLink);
-
-        function resetTimer() {
-            hideLoginLink();
-            clearTimeout(timer);
-            startTimer();
-        }
-
-        let timer;
-
-        function startTimer() {
-            timer = setTimeout(hideLoginLink, 10000);  // 10 secondes
-        }
-
-        document.addEventListener('mousemove', resetTimer);
-        document.addEventListener('keydown', resetTimer);
-
-        startTimer();
-    </script>
 
 {% endblock %}

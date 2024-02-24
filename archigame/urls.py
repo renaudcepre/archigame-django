@@ -1,12 +1,15 @@
 from django.contrib import admin
-from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 
-from games.views import leaderboards, add_game, GameDetailView, GameUpdateView, game_list
+from games.views import add_game, GameDetailView, GameUpdateView, game_list, get_leaderboard_for_game, leaderboards, \
+    all_games_configurations
 from users.views import profile_view
 
 urlpatterns = [
+    path('api/leaderboard/<int:game_id>/', get_leaderboard_for_game, name='api_leaderboard_for_game'),
     path('leaderboards/', leaderboards, name='leaderboards'),
+    path('api/gameconfigurations/', all_games_configurations, name='games_configurations'),
+
     path("accounts/", include("django.contrib.auth.urls")),
     path('accounts/profile/', profile_view, name='profile'),
     path('admin/', admin.site.urls),

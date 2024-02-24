@@ -1,14 +1,12 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
 
 class Game(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    bgg_number = models.IntegerField(null=True, unique=True)
-
-    score_min = models.IntegerField(default=0)
-    score_max = models.IntegerField()
+    bgg_number = models.IntegerField(null=True, blank=True, unique=True)
 
     def __str__(self):
         return self.name
@@ -23,14 +21,27 @@ class Extension(models.Model):
         return self.name
 
 
-class Play(models.Model):
-    date = models.DateField(default=timezone.now)
+class GameConfiguration(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     extensions = models.ManyToManyField(Extension, blank=True)
+    min_players = models.IntegerField(default=1)
+    max_players = models.IntegerField(default=4)
+    score_min = models.IntegerField(default=0)
+    score_max = models.IntegerField()
+
+    def __str__(self):
+        extensions_names = ", ".join(extension.name for extension in self.extensions.all())
+        player_info = f"{self.min_players}-{self.max_players} players"
+        return f"{self.game.name} with extensions: {extensions_names} ({player_info})"
+
+
+class Play(models.Model):
+    date = models.DateField(default=timezone.now)
+    game_configuration = models.ForeignKey(GameConfiguration, on_delete=models.CASCADE, related_name='plays')
     players = models.ManyToManyField(settings.AUTH_USER_MODEL, through='PlayerScore', related_name='plays')
 
     def __str__(self):
-        return f"{self.game.name} on {self.date}"
+        return f"{self.game_configuration} on {self.date}"
 
 
 class PlayerScore(models.Model):
@@ -44,8 +55,8 @@ class PlayerScore(models.Model):
 
 class UserGameScore(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='game_scores')
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game_configuration = models.ForeignKey(GameConfiguration, on_delete=models.CASCADE, related_name='user_game_scores', null=True)
     total_score = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = ('user', 'game')
+        unique_together = ('user', 'game_configuration')
