@@ -1,7 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import inlineformset_factory
 
-from .models import Game
+from .models import Game, Extension
 from .models import GameConfiguration
 from .models import Play
 
@@ -16,6 +17,15 @@ class GameForm(forms.ModelForm):
     class Meta:
         model = Game
         fields = ['name', 'bgg_number']
+
+
+class ExtensionForm(forms.ModelForm):
+    class Meta:
+        model = Extension
+        fields = ['name', 'bgg_number']
+
+
+ExtensionFormSet = inlineformset_factory(Game, Extension, form=ExtensionForm, extra=1, can_delete=True)
 
 
 class GameConfigurationForm(forms.ModelForm):

@@ -5,6 +5,7 @@
 .idea
 .idea/*
 
+
 ### Django ###
 *.log
 *.pot

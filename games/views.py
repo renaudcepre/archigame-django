@@ -1,16 +1,17 @@
 import datetime
 import json
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.serializers import serialize
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import DetailView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 
 from users.models import User
-from .forms import PlayForm
+from .forms import PlayForm, ExtensionFormSet
 from .models import GameConfiguration, PlayerScore
 
 
@@ -148,14 +149,30 @@ def add_game(request):
     return render(request, 'games/add_game.html', {'form': game_form})
 
 
-# class GameCreateView(LoginRequiredMixin, CreateView):
-#     model = Game
-#     form_class = GameForm
-#     template_name = 'games/add_game.html'
-#
-#     def get_success_url(self):
-#         return reverse_lazy('game_detail', kwargs={'pk': self.object.pk})
+class GameCreateView(LoginRequiredMixin, CreateView):
+    model = Game
+    form_class = GameForm
+    template_name = 'games/add_game.html'
+    success_url = reverse_lazy('game_list')
 
+    def get_context_data(self, **kwargs):
+        context = super(GameCreateView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['extensions_form'] = ExtensionFormSet(self.request.POST)
+        else:
+            context['extensions_form'] = ExtensionFormSet()
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        extensions_form = context['extensions_form']
+        if extensions_form.is_valid():
+            self.object = form.save()
+            extensions_form.instance = self.object
+            extensions_form.save()
+            return super(GameCreateView, self).form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
 
 class GameDetailView(DetailView):
     model = Game

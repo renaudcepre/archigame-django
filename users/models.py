@@ -6,8 +6,6 @@ from games.models import Game, PlayerScore, UserGameScore, Play
 
 
 class User(AbstractUser):
-    coucou = models.IntegerField(default=0)
-
     def total_score(self):
         return UserGameScore.objects.filter(user=self).aggregate(total=Sum('total_score'))['total'] or 0
 

@@ -1,10 +1,10 @@
 from django.urls import path
 
-from games.views import add_game, GameDetailView, GameUpdateView, game_list, leaderboards, leaderboard, add_play
+from games.views import GameCreateView, GameDetailView, GameUpdateView, game_list, leaderboards, leaderboard, add_play
 
 urlpatterns = [
     # Crud
-    path('games/add', add_game, name='add_game'),
+    path('games/add', GameCreateView.as_view(), name='add_game'),
     path('games/', game_list, name='game_list'),
     path('games/update_game/<int:pk>/', GameUpdateView.as_view(), name='update_game'),
     path('games/detail/<int:game_id>/', GameDetailView.as_view(), name='game_detail'),

@@ -910,19 +910,14 @@ video {
   color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 
-.text-orange-700 {
+.text-red-700 {
   --tw-text-opacity: 1;
-  color: rgb(194 65 12 / var(--tw-text-opacity));
+  color: rgb(185 28 28 / var(--tw-text-opacity));
 }
 
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-red-700 {
-  --tw-text-opacity: 1;
-  color: rgb(185 28 28 / var(--tw-text-opacity));
 }
 
 .shadow {

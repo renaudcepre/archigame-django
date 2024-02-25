@@ -15,7 +15,7 @@ class Game(models.Model):
 class Extension(models.Model):
     game = models.ForeignKey(Game, related_name='extensions', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    bgg_number = models.IntegerField(null=True)
+    bgg_number = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
