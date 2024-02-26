@@ -181,11 +181,40 @@ class GameDetailView(DetailView):
     pk_url_kwarg = 'game_id'
 
 
-class GameUpdateView(UpdateView):
+class GameUpdateView(LoginRequiredMixin, UpdateView):
     model = Game
-    fields = ['name', 'bgg_number']
-    template_name = 'games/update.html'
+    form_class = GameForm
+    template_name = 'games/update_game.html'
     success_url = reverse_lazy('game_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.POST:
+            formset = ExtensionFormSet(self.request.POST, instance=self.object)
+            if not formset.is_valid():
+                print(formset.errors)  # Affiche les erreurs pour diagnostic
+            context['extensions_form'] = ExtensionFormSet(self.request.POST, instance=self.object)
+
+        else:
+            context['extensions_form'] = ExtensionFormSet(instance=self.object)
+        # print(f"CONTEXT: {context}")
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        extensions_form = context['extensions_form']
+        if extensions_form.is_valid():
+            self.object = form.save()
+            for form in extensions_form.forms:
+                if form.cleaned_data.get('id') and form.cleaned_data.get('deleted'):
+                    print('delETR')
+                    Extension.objects.filter(id=form.cleaned_data['id']).delete()
+            extensions_form.instance = self.object
+            extensions_form.save()
+            return super().form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
 
 
 def game_list(request):
